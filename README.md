@@ -1,8 +1,8 @@
 # Cleaning the Samsung Galaxy smartphone accelerometer data
 
-The source data was collected from Samsung Galazy smartphones and obtained through the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones#). It contains information from a group of 30 volunteers performing various activities such as walking up stairs, laying down, sitting, and more.
+The source data were collected from Samsung Galazy smartphones and obtained indirectly through the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones#) (data were provided in a zipped format as part of the Coursera Data Cleaning course). It contains information from a group of 30 volunteers performing various activities such as walking up stairs, laying down, sitting, and more.
 
-The data cleaning was done through the script [run_analysi.R](https://github.com/solquist/DataCleaningAssignment). At a high level, the script performs the following required tasks from the data cleaning assignment:
+The data cleaning was done through the script [run_analysis.R](https://github.com/solquist/DataCleaningAssignment). At a high level, the script performs the following required tasks from the data cleaning assignment:
 
 1. Merges the training and the test sets to create one data set.
 2. Extracts only the measurements on the mean and standard deviation for each measurement.
