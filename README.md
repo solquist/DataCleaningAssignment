@@ -20,7 +20,7 @@ The package `reshape2` is required to run the script. It is used to perform the 
 
 ### Reading in the data
 
-It is assumed the required data already exists in the working directory and having the same directory structure obtained when unzipping the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). The script checks to see if the expected directories exist. If they don't, an error is thrown with a message indicating the directory that was expected.
+It is assumed the required data already exists in the working directory and having the same directory structure obtained when unzipping the source to the working directory (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). The script checks to see if the expected directories exist. If they don't, an error is thrown with a message indicating the directory that was expected.
 
 The following files (with relative path included), needed to piece together the required data set, are read in using `read.table()`.
 
@@ -41,7 +41,7 @@ The following files (with relative path included), needed to piece together the 
 
 Now that we have the pieces of data we need, putting them together is pretty straight forward. The training data set has a total of 7,352 obervations and the test data set has 2,947. When combining the two, we will have a total of 10,299 (7,352 + 2,947) observations. We also need to add a column for the subject ID's and the activity ID's. This will give us a total of 563 columns (561 for the sensor data variables anad 2 more for the subject ID an activity ID).
 
-To avoid any problems with order, we just use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. This is first done for the training data set, building a data frame of the form:
+To avoid any problems with order, we use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. We start with the subject ID and activity ID columns as those are out identifiers for an observation. This is first done for the training data set, building a data frame of the form:
 
 | Subject.ID                 | Activity                    | Data block (561 variables)         |
 |:---------------------------|:----------------------------|:-----------------------------------|
@@ -63,7 +63,11 @@ Finally, the name of the first column is set to "Subject.ID", the second to "Act
 
 ### Extracting only the mean and standard deviation for each measurement
 
-Descriptions to come.
+For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "-mean()" or "-std()" in their title. We also need to make sure we keep the sbuject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "-mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "-std()". These were combined, along with the indices 1 an 2 for the subject and activity ID columns, using the `c()` function.
+
+`df` is then subset using this list of indices and assigned back to `df`.
+
+Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle() label". I chose to use "-mean()" and "-std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
 
 ### Providing desriptive activity names
 
