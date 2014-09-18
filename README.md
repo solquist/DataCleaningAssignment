@@ -63,19 +63,46 @@ Finally, the name of the first column is set to "Subject.ID", the second to "Act
 
 ### Extracting only the mean and standard deviation for each measurement
 
-For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "-mean()" or "-std()" in their title. We also need to make sure we keep the sbuject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "-mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "-std()". These were combined, along with the indices 1 an 2 for the subject and activity ID columns, using the `c()` function.
+For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "mean()" or "std()" in their title. We also need to make sure we keep the sbuject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "std()". These were combined, along with the indices 1 an 2 for the subject and activity ID columns, using the `c()` function.
 
 `df` is then subset using this list of indices and assigned back to `df`.
 
-Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle() label". I chose to use "-mean()" and "-std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
+Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle() label". I chose to use "mean()" and "std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
 
 ### Providing desriptive activity names
 
-Descriptions to come.
+Description to come.
 
 ### Creating descriptive variable names
 
-Descriptions to come.
+For descriptive names, a nomenclature is defined to add some consistency to the naming. The choices in the ordering are in trying to represent the more general aspect of the variable to the more specific. This required re-ordering of the components rather than just a straight substitution. To do this I start with a reference of the column names to build a vector of selection indices and build up a new label according to the rules below. Also note some of the labels have the sub-string "BodyBody" in them. That appears to be a mistake in the coding of the variable (when you look at the patterns of the other variables) and so there is also a step to replace "BodyBody" with "Body" so it can be treated with the same logic of the others. Also note it is important that the step above has already been filtered to labels containing "mean()" or "std()" as the name parsing logic is built on that assumption.
+
+The names are rebuilt using the following nomenclature:
+
+  \<sensor type\>.\<acceleration type\>.\<component\>.\<domain\>.\<statistic\>
+
+where these are the possible values
+
+  * \<sensor type\>
+    * Accelerometer --- measurement comes from an accelerometer
+    * Gyroscope --- measurement comes from a gyroscope
+  * \<acceleration type\>
+    * Body --- acceleration component from the movement of the body
+    * Gravity --- acceleration componenet due to gravity
+    * Jerk --- calculated value incorporating linear body acceleration plus angular
+  * \<component\>
+    * X --- x-component of the measurement
+    * Y --- y-component of the measurement
+    * Z --- z-component of the measurement
+    * Length - length of the (x, y, z) measurement
+  * \<domain\>
+    * Time --- measurement is in the time domain
+    * Freq --- measurement is in the frequency domain
+  * \<statistic\>
+    * Mean --- mean of the measurements
+    * Std --- standard deviation of the measurements
+    
+For example, the name "tBodyAcc-mean()-X" would become "Accelerometer.Body.X.Time.Mean". "Length"" made most sense to include along with "X", "Y", and "Z", as they essentially describe which geometric aspect of the vector the variable describes."Jerk" was included as an acceleration type (rather than an optional identifier) as it is combining information from the linear acceleration along with angular information to get a new measure. It was verified that "Jerk" and "Body" always occur together to make sure no information was lost. To keep the "Jerk" logic as simple as possible, the script goes through the normal "Body" logic first and then just replaces "Body." with "Jerk." in this case. This keeps the nomenclature consistent by not adding an additional label for "Jerk" for those data labels.
 
 ### Creating the final tidy data set
 
