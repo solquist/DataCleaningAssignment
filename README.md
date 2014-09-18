@@ -24,7 +24,18 @@ It is assumed the required data already exists in the working directory and havi
 
 The following files (with relative path included), needed to piece together the required data set, are read in using `read.table()`.
 
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the raw sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`.
+#### General
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`. The results are assigned to the variable `feature.lables`.
+  
+#### Training data set
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt" - vector of 7352 subject ID's from the training set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.train`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/Y_train.txt" - vector of 7352 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.train`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt" - table of sensor data from the training set. It has 561 columns and 7352 rows. The results are assigned to the variable `dat.train`.
+  
+#### Test data set
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt" - vector of 2947 subject ID's from the test set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.test`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/Y_test.txt" - vector of 2947 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.test`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_test.txt" - table of sensor data from the test set. It has 561 columns and 2947 rows. The results are assigned to the variable `dat.test`.
 
 ### Merging the training and test sets
 
