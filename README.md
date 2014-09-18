@@ -10,13 +10,17 @@ The data cleaning was done through the script [run_analysis.R](https://github.co
 4. Appropriately labels the data set with descriptive variable names.
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
-In addition to the data processing steps, the analysis script also takes care of reading in the data and saving out the final tidy data set as XXX. The variables for the resulting data set are defined in [CodeBook.md](https://github.com/solquist/DataCleaningAssignment)
+In addition to the data processing steps, the analysis script also takes care of reading in the data and saving out the final tidy data set as AverageValueBySubjectAndActivity.txt. The variables for the resulting data set are defined in [CodeBook.md](https://github.com/solquist/DataCleaningAssignment)
+
+## Script Requirements
+
+The following R components are required to run the script:
 
 ## Processing the data
 
 ### Reading in the data
 
-Descriptions to come.
+It is assumed the required data already exists in the working directory and having the same directory structure obtained whwen unzipping the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). The following files are read in using
 
 ### Merging the training and test sets
 
