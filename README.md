@@ -28,18 +28,38 @@ The following files (with relative path included), needed to piece together the 
   * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`. The results are assigned to the variable `feature.lables`.
   
 #### Training data set
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt" - vector of 7352 subject ID's from the training set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.train`.
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/Y_train.txt" - vector of 7352 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.train`.
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt" - table of sensor data from the training set. It has 561 columns and 7352 rows. The results are assigned to the variable `dat.train`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt" - vector of 7,352 subject ID's from the training set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.train`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/Y_train.txt" - vector of 7,352 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.train`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt" - table of sensor data from the training set. It has 561 columns and 7,352 rows. The results are assigned to the variable `dat.train`.
   
 #### Test data set
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt" - vector of 2947 subject ID's from the test set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.test`.
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/Y_test.txt" - vector of 2947 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.test`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt" - vector of 2,947 subject ID's from the test set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.test`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/Y_test.txt" - vector of 2,947 activity ID's that matches with the vector of subject ID's above. The results are assigned to the variable `activity.test`.
   * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_test.txt" - table of sensor data from the test set. It has 561 columns and 2947 rows. The results are assigned to the variable `dat.test`.
 
 ### Merging the training and test sets
 
-Descriptions to come.
+Now that we have the pieces of data we need, putting them together is pretty straight forward. The training data set has a total of 7,352 obervations and the test data set has 2,947. When combining the two, we will have a total of 10,299 (7,352 + 2,947) observations. We also need to add a column for the subject ID's and the activity ID's. This will give us a total of 563 columns (561 for the sensor data variables anad 2 more for the subject ID an activity ID).
+
+To avoid any problems with order, we just use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. This is first done for the training data set, building a data frame of the form:
+
+| Subject.ID                 | Activity                    | Data block (561 variables)         |
+|:---------------------------|:----------------------------|:-----------------------------------|
+| 7,352 rows of subject ID's | 7,352 rows of activity ID's | 7,352 rows of 561 sensor variables |
+
+Going through the same process for the test data, we get a data frame of the form:
+
+| Subject.ID                 | Activity                    | Data block (561 variables)         |
+|:---------------------------|:----------------------------|:-----------------------------------|
+| 2,947 rows of subject ID's | 2,947 rows of activity ID's | 2,947 rows of 561 sensor variables |
+
+We then use `rbind()` to append the test data frame to the training data frame to end up with a final data frame `df` of the form:
+
+| Subject.ID                 | Activity                    | Data block (561 variables)         |
+|:---------------------------|:----------------------------|:-----------------------------------|
+| 10,299 rows of subject ID's | 10,299 rows of activity ID's | 10,299 rows of 561 sensor variables |
+
+Finally, the name of the first column is set to "Subject.ID", the second to "Activity", and the remaining 561 are set to the feature labels (`feature.labels`) we read in above. The temporary data frames we used to build up `df` and the pieces we read in are cleaned up using `rm()` as we no longer need these pieces.
 
 ### Extracting only the mean and standard deviation for each measurement
 
