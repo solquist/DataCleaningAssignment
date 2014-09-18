@@ -75,7 +75,7 @@ Description to come.
 
 ### Creating descriptive variable names
 
-For descriptive names, a nomenclature is defined to add some consistency to the naming. The choices in the ordering are in trying to represent the more general aspect of the variable to the more specific. This required re-ordering of the components rather than just a straight substitution. To do this I start with a reference of the column names to build a vector of selection indices and build up a new label according to the rules below. Also note some of the labels have the sub-string "BodyBody" in them. That appears to be a mistake in the coding of the variable (when you look at the patterns of the other variables) and so there is also a step to replace "BodyBody" with "Body" so it can be treated with the same logic of the others. Also note it is important that the step above has already been filtered to labels containing "mean()" or "std()" as the name parsing logic is built on that assumption.
+For descriptive names, a nomenclature is defined to add some consistency to the naming. The choices in the ordering are in trying to represent the more general aspect of the variable to the more specific. This required re-ordering of the components rather than just a straight substitution. To do this I start with a reference of the column names to build a vector of selection indices and build up a new label according to the rules below. Also note some of the labels have the sub-string "BodyBody" in them. That appears to be a mistake in the coding of the variable (when you look at the patterns of the other variables) and so there is also a step to replace "BodyBody" with "Body" so it can be treated with the same logic as the others. Also note it is important that the step above has already been filtered to labels containing "mean()" or "std()" as the name parsing logic is built on that assumption.
 
 The names are rebuilt using the following nomenclature:
 
@@ -84,25 +84,38 @@ The names are rebuilt using the following nomenclature:
 where these are the possible values
 
   * \<sensor type\>
-    * Accelerometer --- measurement comes from an accelerometer
-    * Gyroscope --- measurement comes from a gyroscope
+    * Accelerometer -- measurement comes from an accelerometer
+    * Gyroscope -- measurement comes from a gyroscope
   * \<acceleration type\>
-    * Body --- acceleration component from the movement of the body
-    * Gravity --- acceleration componenet due to gravity
-    * Jerk --- calculated value incorporating linear body acceleration plus angular
+    * Body -- acceleration component from the movement of the body
+    * Gravity -- acceleration componenet due to gravity
+    * Jerk -- calculated value incorporating linear body acceleration plus angular
   * \<component\>
-    * X --- x-component of the measurement
-    * Y --- y-component of the measurement
-    * Z --- z-component of the measurement
-    * Length - length of the (x, y, z) measurement
+    * X -- x-component of the measurement
+    * Y -- y-component of the measurement
+    * Z -- z-component of the measurement
+    * Length -- length of the (x, y, z) measurement
   * \<domain\>
-    * Time --- measurement is in the time domain
-    * Freq --- measurement is in the frequency domain
+    * Time -- measurement is in the time domain
+    * Freq -- measurement is in the frequency domain
   * \<statistic\>
-    * Mean --- mean of the measurements
-    * Std --- standard deviation of the measurements
+    * Mean -- mean of the measurements
+    * Std -- standard deviation of the measurements
     
 For example, the name "tBodyAcc-mean()-X" would become "Accelerometer.Body.X.Time.Mean". "Length"" made most sense to include along with "X", "Y", and "Z", as they essentially describe which geometric aspect of the vector the variable describes."Jerk" was included as an acceleration type (rather than an optional identifier) as it is combining information from the linear acceleration along with angular information to get a new measure. It was verified that "Jerk" and "Body" always occur together to make sure no information was lost. To keep the "Jerk" logic as simple as possible, the script goes through the normal "Body" logic first and then just replaces "Body." with "Jerk." in this case. This keeps the nomenclature consistent by not adding an additional label for "Jerk" for those data labels.
+
+The following utility function was defined in the script to encapsulate the same step that needed to be done over and over. It essentially looks for columns that contain the string of interest and builds up the new strings by appending the appropriate piece of the nomenclature defined above on equivalent rows.
+
+```
+## Utility function to parse out a portion of the original string and append the
+## new label. This function assumes the new labels go in 'column.names.new' and
+## the originals come from 'column.names'
+ParseAndAppendLabel <- function(find.str, append.str)
+{
+  indices <- grep(find.str, column.names)
+  column.names.new[indices] <<- paste(column.names.new[indices], append.str, sep = "")
+}
+```
 
 ### Creating the final tidy data set
 
