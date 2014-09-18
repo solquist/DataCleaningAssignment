@@ -14,13 +14,17 @@ In addition to the data processing steps, the analysis script also takes care of
 
 ## Script Requirements
 
-The following R components are required to run the script:
+The package `reshape2` is required to run the script. It is used to perform the final reshaping step to create the tidy data set.
 
 ## Processing the data
 
 ### Reading in the data
 
-It is assumed the required data already exists in the working directory and having the same directory structure obtained whwen unzipping the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). The following files are read in using
+It is assumed the required data already exists in the working directory and having the same directory structure obtained when unzipping the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip). The script checks to see if the expected directories exist. If they don't, an error is thrown with a message indicating the directory that was expected.
+
+The following files (with relative path included), needed to piece together the required data set, are read in using `read.table()`.
+
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the raw sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`.
 
 ### Merging the training and test sets
 
