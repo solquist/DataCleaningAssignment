@@ -106,7 +106,7 @@ activity.labels <- read.table(file.name, stringsAsFactors = FALSE)
 
 # Use the activity label mapping to turn the activity ID into a label
 df$Activity <- sapply(df$Activity, function(x) activity.labels[x, 2])
-df$Activity <- factor(df$Activity)
+df$Activity <- factor(df$Activity, levels = activity.labels$V2)
 
 ##
 ## Provide more descriptive variable names
