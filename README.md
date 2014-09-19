@@ -121,9 +121,9 @@ ParseAndAppendLabel <- function(find.str, append.str)
 
 ### Creating the final tidy data set
 
-Using the `reshape` package, the reshaped version of the data was pretty straight forward. We essentially want to have one row for each unique `Subjet.ID` and `Activity` combination, aggregating duplicate measurements using the average (the `mean()` function).
+Using the `reshape` package, the reshaped version of the data was pretty straight forward. We essentially want to have one row for each unique `Subjet.ID` and `Activity` combination, aggregating multiple measurements using the average (the `mean()` function).
 
-In order to indicate which columns are to be used as our identifiers, we use the `melt()` function with the option `id = c("Subject.ID", "Activity")`. This sets the right meta-data on the data frame and collapses all of the sensor measurements into a `variable` column so that we can leverage other reshaping functions within the package. The results are assigned to the variable `df.melt`.
+In order to indicate which columns are to be used as our identifiers, we use the `melt()` function on `df` with the option `id = c("Subject.ID", "Activity")`. This creates a data frame with the right meta-data for the identifier columns and "melts" all of the sensor measurements into `variable` and `value` pairs so that we can leverage other reshaping functions within the package. The results are assigned to the variable `df.melt`.
 
 The final reshape is done using the function `dcast()`. The data frame we want to create is showing `Subject.ID` and `Activity` by `variable` and aggregating the data using the `mean()` function. This is assigned to the variable `df.reshape` and the operation is performed simply by the following:
 
@@ -132,6 +132,8 @@ df.reshape <- dcast(df.melt, Subject.ID + Activity ~ variable, mean)
 
 ```
 
+Recall in the steps to add descriptive activity labels we chose to maintain the ordering of the factor labels to make it easy to recover the original activity ID. Because of this, the step above will sort the activity column by factor value rather than alphabetically. To make it more natural to look up values in a printed version of the table, we use the `order()` function to sort by subject ID and the character value of the activity factor so that the activity factors appear in alphabetical order.
+
 ### Saving the tidy data
 
-Descriptions to come.
+The data frame created in the step above, `df.reshape` is saved to the current working directory with a file name of "AverageValueBySubjectAndActivity.txt" using the `write.table()` function. As we do not want row labels, the option `row.names = FALSE` is used.
