@@ -25,7 +25,7 @@ It is assumed the required data already exists in the working directory and havi
 The following files (with relative path included), needed to piece together the required data set, are read in using `read.table()`.
 
 #### General
-  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`. The results are assigned to the variable `feature.lables`.
+  * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt" - vector of 561 feature labels for the sensor data blocks. Since this will be used to label the data, it is read in with the option `stringsAsFactors = FALSE`. The results are assigned to the variable `feature.labels`.
   
 #### Training data set
   * "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt" - vector of 7,352 subject ID's from the training set. Each of these represents an observation, or row, in the data set we are piecing together. The results are assigned to the variable `subject.train`.
@@ -39,9 +39,9 @@ The following files (with relative path included), needed to piece together the 
 
 ### Merging the training and test sets
 
-Now that we have the pieces of data we need, putting them together is pretty straight forward. The training data set has a total of 7,352 obervations and the test data set has 2,947. When combining the two, we will have a total of 10,299 (7,352 + 2,947) observations. We also need to add a column for the subject ID's and the activity ID's. This will give us a total of 563 columns (561 for the sensor data variables anad 2 more for the subject ID an activity ID).
+Now that we have the pieces of data we need, putting them together is pretty straight forward. The training data set has a total of 7,352 obervations and the test data set has 2,947. When combining the two, we will have a total of 10,299 (7,352 + 2,947) observations. We also need to add a column for the subject ID's and the activity ID's. This will give us a total of 563 columns (561 for the sensor data variables and 2 more for the subject ID and activity ID).
 
-To avoid any problems with order, we use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. We start with the subject ID and activity ID columns as those are out identifiers for an observation. This is first done for the training data set, building a data frame of the form:
+we want to make sure the order of rows remains the same as we piece the blocks together so the right data is joined together. We use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. We start with the subject ID and activity ID columns as those are our identifiers for an observation. This is first done for the training data set, building a data frame of the form:
 
 | Subject.ID                 | Activity                    | Data block (561 variables)         |
 |:---------------------------|:----------------------------|:-----------------------------------|
@@ -63,17 +63,17 @@ Finally, the name of the first column is set to "Subject.ID", the second to "Act
 
 ### Extracting only the mean and standard deviation for each measurement
 
-For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "mean()" or "std()" in their title. We also need to make sure we keep the sbuject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "std()". These were combined, along with the indices 1 an 2 for the subject and activity ID columns, using the `c()` function.
+For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "mean()" or "std()" in their title. We also need to make sure we keep the subject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "std()". These were combined, along with the indices 1 and 2 for the subject and activity ID columns, using the `c()` function.
 
 `df` is then subset using this list of indices and assigned back to `df`.
 
-Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle() label". I chose to use "mean()" and "std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
+Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle()" label. I chose to use "mean()" and "std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
 
 ### Providing desriptive activity names
 
-The data set contains a set of descriptive activity names as they are already good names. The activity labels exist in the file "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt". The labels are read in using the function `read.table()` with the option `stringAsFactors = FALSE` (these are turned to factors later) and saved into the variable `activity.labels`. The activity ID numbers in `df` are replaced with the labels from a lookup into `activity.labels` through the function `sapply()`.
+The data set contains a set of descriptive activity names. As they are already good descriptive names, they are a good source for the labels. The activity labels exist in the file "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt". The labels are read in using the function `read.table()` with the option `stringAsFactors = FALSE` (these are turned to factors later) and saved into the variable `activity.labels`. The activity ID numbers in `df` are replaced with the labels from a lookup into `activity.labels` through the function `sapply()`.
 
-Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. The option `levels = activity.labels$V2` is used for `factor()` in order to keep the same ordinal values asociated with the labels as the original ID's. That way, if the original ID is desired, `as.integer(df$Activity[1])`, for example, will return the original ID and so it is not necessary to hold onto the "ID to label" mapping to recover the original ID's.
+Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. The option `levels = activity.labels$V2` is used for `factor()` in order to keep the same ordinal values asociated with the labels as the original ID's. That way, if the original ID is desired, one can do something like `as.integer(df$Activity[1])`, for example, to return the original ID -- making it not necessary to hold onto the "ID to label" mapping to recover the original ID's.
 
 ### Creating descriptive variable names
 
@@ -104,7 +104,7 @@ where these are the possible values
     * Mean -- mean of the measurements
     * Std -- standard deviation of the measurements
     
-For example, the name "tBodyAcc-mean()-X" would become "Accelerometer.Body.X.Time.Mean". "Length"" made most sense to include along with "X", "Y", and "Z", as they essentially describe which geometric aspect of the vector the variable describes."Jerk" was included as an acceleration type (rather than an optional identifier) as it is combining information from the linear acceleration along with angular information to get a new measure. It was verified that "Jerk" and "Body" always occur together to make sure no information was lost. To keep the "Jerk" logic as simple as possible, the script goes through the normal "Body" logic first and then just replaces "Body." with "Jerk." in this case. This keeps the nomenclature consistent by not adding an additional label for "Jerk" for those data labels.
+For example, the name "tBodyAcc-mean()-X" would become "Accelerometer.Body.X.Time.Mean". "Length" made most sense to include along with "X", "Y", and "Z", as they essentially describe which geometric aspect of the vector the variable describes."Jerk" was included as an acceleration type (rather than an optional identifier) as it is combining information from the linear acceleration along with angular information to get a new measure. It was verified that "Jerk" and "Body" always occur together to make sure no information was lost. To keep the "Jerk" logic as simple as possible, the script goes through the normal "Body" logic first and then just replaces "Body." with "Jerk." in this case. This keeps the nomenclature consistent by not adding an additional label for "Jerk".
 
 The following utility function was defined in the script to encapsulate the same step that needed to be done over and over. It essentially looks for columns that contain the string of interest and builds up the new strings by appending the appropriate piece of the nomenclature defined above on equivalent rows.
 
