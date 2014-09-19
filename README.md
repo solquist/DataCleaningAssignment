@@ -73,7 +73,7 @@ Note: there are other forms of "mean" that show up in some of the labels, e.g. w
 
 The data set contains a set of descriptive activity names. As they are already good descriptive names, they are a good source for the labels. The activity labels exist in the file "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt". The labels are read in using the function `read.table()` with the option `stringAsFactors = FALSE` (these are turned to factors later) and saved into the variable `activity.labels`. The activity ID numbers in `df` are replaced with the labels from a lookup into `activity.labels` through the function `sapply()`.
 
-Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. The option `levels = activity.labels$V2` is used for `factor()` in order to keep the same ordinal values asociated with the labels as the original ID's. That way, if the original ID is desired, one can do something like `as.integer(df$Activity[1])`, for example, to return the original ID -- making it not necessary to hold onto the "ID to label" mapping to recover the original ID's.
+Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. Note, the `levels` options is not specified in the scsript, so the new factors will be ordered alphabetically. If it were necessary to easily get back to the original activity ID's, passing the option `levels = activity.labels$V2` would make it easy to keep the labels in the original order. However, since that is not needed to produce the final set of data and would introduce an extra step to re-order the data to make an "easier to read" alphabetical sorting, we chose to stick with the default alphabetical ordering of the factors.
 
 ### Creating descriptive variable names
 
@@ -131,8 +131,6 @@ The final reshape is done using the function `dcast()`. The data frame we want t
 df.reshape <- dcast(df.melt, Subject.ID + Activity ~ variable, mean)
 
 ```
-
-Recall in the steps to add descriptive activity labels we chose to maintain the ordering of the factor labels to make it easy to recover the original activity ID. Because of this, the step above will sort the activity column by factor value rather than alphabetically. To make it more natural to look up values in a printed version of the table, we use the `order()` function to sort by subject ID and the character value of the activity factor so that the activity factors appear in alphabetical order.
 
 ### Saving the tidy data
 

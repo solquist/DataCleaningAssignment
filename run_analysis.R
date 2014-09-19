@@ -106,7 +106,7 @@ activity.labels <- read.table(file.name, stringsAsFactors = FALSE)
 
 # Use the activity label mapping to turn the activity ID into a label
 df$Activity <- sapply(df$Activity, function(x) activity.labels[x, 2])
-df$Activity <- factor(df$Activity, levels = activity.labels$V2)
+df$Activity <- factor(df$Activity)
 
 ##
 ## Provide more descriptive variable names
@@ -194,13 +194,6 @@ library(reshape2)
 # Melt the data and reshape using the reshape2 package
 df.melt <- melt(df, id = c("Subject.ID", "Activity"))
 df.reshape <- dcast(df.melt, Subject.ID + Activity ~ variable, mean)
-
-# Since the activity factors are maintained in the same order as the ID to label mapping,
-# the oder out of dcast will be by factor, rather than alphabetical. So that it will be easier
-# to look up in a print of the "tidy" data frame by ID and activity label, we do an additional
-# order by subject ID and activity label.
-
-df.reshape <- df.reshape[order(df.reshape$Subject.ID, as.character(df.reshape$Activity)),]
 
 ##
 ## Finally, save out the tidy data set using 'write.table()' with 'row.names = FALSE'
