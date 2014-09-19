@@ -71,7 +71,9 @@ Note: there are other forms of "mean" that show up in some of the labels, e.g. w
 
 ### Providing desriptive activity names
 
-Description to come.
+The data set contains a set of descriptive activity names as they are already good names. The activity labels exist in the file "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt". The labels are read in using the function `read.table()` with the option `stringAsFactors = FALSE` (these are turned to factors later) and saved into the variable `activity.labels`. The activity ID numbers in `df` are replaced with the labels from a lookup into `activity.labels` through the function `sapply()`.
+
+Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. The option `levels = activity.labels$V2` is used for `factor()` in order to keep the same ordinal values asociated with the labels as the original ID's. That way, if the original ID is desired, `as.integer(df$Activity[1])`, for example, will return the original ID and so it is not necessary to hold onto the "ID to label" mapping to recover the original ID's.
 
 ### Creating descriptive variable names
 
