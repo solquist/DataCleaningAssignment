@@ -65,7 +65,7 @@ Finally, the name of the first column is set to "Subject.ID", the second to "Act
 
 For the mean and standard deviation columns, we keep the columns that are specifically named with the pattern "mean()" or "std()" in their title. We also need to make sure we keep the subject ID and activity ID columns. The function `grep("mean\\(\\)", column.names)` was used to get the indices of the columns that contain "mean()" and `grep("std\\(\\)", column.names)` to get the indices of the columns that contain "std()". These were combined, along with the indices 1 and 2 for the subject and activity ID columns, using the `c()` function.
 
-`df` is then subset using this list of indices and assigned back to `df`.
+`df` is then subset using this list of indices and assigned back to `df`. This results in keeping 66 data columns (68 total columns with the subject ID and activity ID).
 
 Note: there are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle()" label. I chose to use "mean()" and "std()" as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
 
