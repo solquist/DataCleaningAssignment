@@ -121,7 +121,16 @@ ParseAndAppendLabel <- function(find.str, append.str)
 
 ### Creating the final tidy data set
 
-Descriptions to come.
+Using the `reshape` package, the reshaped version of the data was pretty straight forward. We essentially want to have one row for each unique `Subjet.ID` and `Activity` combination, aggregating duplicate measurements using the average (the `mean()` function).
+
+In order to indicate which columns are to be used as our identifiers, we use the `melt()` function with the option `id = c("Subject.ID", "Activity")`. This sets the right meta-data on the data frame and collapses all of the sensor measurements into a `variable` column so that we can leverage other reshaping functions within the package. The results are assigned to the variable `df.melt`.
+
+The final reshape is done using the function `dcast()`. The data frame we want to create is showing `Subject.ID` and `Activity` by `variable` and aggregating the data using the `mean()` function. This is assigned to the variable `df.reshape` and the operation is performed simply by the following:
+
+```
+df.reshape <- dcast(df.melt, Subject.ID + Activity ~ variable, mean)
+
+```
 
 ### Saving the tidy data
 
