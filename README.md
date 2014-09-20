@@ -41,7 +41,7 @@ The following files (with relative path included), needed to piece together the 
 
 Now that we have the pieces of data we need, putting them together is pretty straight forward. The training data set has a total of 7,352 obervations and the test data set has 2,947. When combining the two, we will have a total of 10,299 (7,352 + 2,947) observations. We also need to add a column for the subject ID's and the activity ID's. This will give us a total of 563 columns (561 for the sensor data variables and 2 more for the subject ID and activity ID).
 
-we want to make sure the order of rows remains the same as we piece the blocks together so the right data is joined together. We use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. We start with the subject ID and activity ID columns as those are our identifiers for an observation. This is first done for the training data set, building a data frame of the form:
+we want to make sure the order of rows remains the same as we piece the blocks together so the correct data is joined together. We use `cbind()` to paste the columns together. The data frame is built out from left to right by binding the activity column to the subject ID column and finally the data block to the previous result. We start with the subject ID and activity ID columns as those are our identifiers we will use to aggregate the data. This is first done for the training data set, building a data frame of the form:
 
 | Subject.ID                 | Activity                    | Data block (561 variables)         |
 |:---------------------------|:----------------------------|:-----------------------------------|
@@ -73,7 +73,7 @@ Note: there are other forms of "mean" that show up in some of the labels, e.g. w
 
 The data set contains a set of descriptive activity names. As they are already good descriptive names, they are a good source for the labels. The activity labels exist in the file "./getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt". The labels are read in using the function `read.table()` with the option `stringAsFactors = FALSE` (these are turned to factors later) and saved into the variable `activity.labels`. The activity ID numbers in `df` are replaced with the labels from a lookup into `activity.labels` through the function `sapply()`.
 
-Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. Note, the `levels` options is not specified in the scsript, so the new factors will be ordered alphabetically. If it were necessary to easily get back to the original activity ID's, passing the option `levels = activity.labels$V2` would make it easy to keep the labels in the original order. However, since that is not needed to produce the final set of data and would introduce an extra step to re-order the data to make an "easier to read" alphabetical sorting, we chose to stick with the default alphabetical ordering of the factors.
+Finally, the column `df$Activity` is turned into factors as the activity labels really are categorical values. Note, the `levels` options is not specified in the script, so the new factors will be ordered alphabetically. If it were necessary to easily get back to the original activity ID's, passing the option `levels = activity.labels$V2` would make it easy to keep the labels in the original order. However, since that is not needed to produce the final set of data and would introduce an extra step to re-order the data to make an "easier to read" alphabetical sorting, we chose to stick with the default alphabetical ordering of the factors.
 
 ### Creating descriptive variable names
 
@@ -86,23 +86,23 @@ The names are rebuilt using the following nomenclature:
 where these are the possible values
 
   * \<sensor type\>
-    * Accelerometer -- measurement comes from an accelerometer
-    * Gyroscope -- measurement comes from a gyroscope
+    * Accelerometer -- measurement comes from an accelerometer (Acc in the original)
+    * Gyroscope -- measurement comes from a gyroscope (Gyro in the original)
   * \<acceleration type\>
-    * Body -- acceleration component from the movement of the body
-    * Gravity -- acceleration componenet due to gravity
-    * Jerk -- calculated value incorporating linear body acceleration plus angular
+    * Body -- acceleration component from the movement of the body (Body in the original)
+    * Gravity -- acceleration componenet due to gravity (Gravity in the original)
+    * Jerk -- calculated value incorporating linear body acceleration plus angular (Jerk in the original)
   * \<component\>
-    * X -- x-component of the measurement
-    * Y -- y-component of the measurement
-    * Z -- z-component of the measurement
-    * Length -- length of the (x, y, z) measurement
+    * X -- x-component of the measurement (X in the original)
+    * Y -- y-component of the measurement (Y in the original)
+    * Z -- z-component of the measurement (Z in the original)
+    * Length -- length of the (x, y, z) measurement (Mag in the original)
   * \<domain\>
-    * Time -- measurement is in the time domain
-    * Freq -- measurement is in the frequency domain
+    * Time -- measurement is in the time domain (t in the original)
+    * Freq -- measurement is in the frequency domain (f in the original)
   * \<statistic\>
-    * Mean -- mean of the measurements
-    * Std -- standard deviation of the measurements
+    * Mean -- mean of the measurements (mean() in the original)
+    * Std -- standard deviation of the measurements (std() in the original)
     
 For example, the name "tBodyAcc-mean()-X" would become "Accelerometer.Body.X.Time.Mean". "Length" made most sense to include along with "X", "Y", and "Z", as they essentially describe which geometric aspect of the vector the variable describes."Jerk" was included as an acceleration type (rather than an optional identifier) as it is combining information from the linear acceleration along with angular information to get a new measure. It was verified that "Jerk" and "Body" always occur together to make sure no information was lost. To keep the "Jerk" logic as simple as possible, the script goes through the normal "Body" logic first and then just replaces "Body." with "Jerk." in this case. This keeps the nomenclature consistent by not adding an additional label for "Jerk".
 

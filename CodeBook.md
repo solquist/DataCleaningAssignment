@@ -10,24 +10,32 @@ This codebook explains the derived data found in "AverageValueBySubjectAndActivi
 
 The raw data for the above study was provided as a [zipped file](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) as part of the Coursera [Getting and Cleaning Data](https://www.coursera.org/course/getdata) course. Much of the raw data is already processed data -- more can be learned in the file features_info.txt. The actual data is divided into a training set and test set of data. Following is a summary of the data available in the zipped file:
 
+### General
+
   * features_info.txt -- this is essentially a codebook for the data from the study. Some portions of this information are reproduced below.
   * README.txt -- overview of the study and files contained in the data set
   * activity_labels.txt -- mapping from an activity label factor (1 - 6) to a descriptive label (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
   * features.txt -- vector of 561 labels corresponding to the processed variables in the data set. This is the pool of variables we will draw our subset from.
-  
-  * train/subject_train.txt -- 7,352 subject ID's (unique volunteer ID) for the data in the training set. Values are in the range of 1 to 30.
+
+### Training set
+
+  * train/subject_train.txt -- 7,352 subject ID's (unique volunteer ID) for the data in the training set. Values are integers in the range of 1 to 30.
   * train/X_train.txt -- 7,352 rows of 561 processed variables in the training set. Values are normalized to the range [-1, 1].
-  * train/Y_train.txt -- 7,352 activity factors for the training set
-  * train/Inertial Signals/*.txt -- raw sensor data for the training set (not used for the processed data)
-  
-  * test/subject_test.txt -- 2,947 subject ID's (unique volunteer ID) for the data in the test set. Values are in the range of 1 to 30.
+  * train/Y_train.txt -- 7,352 activity factors for the training set. Values are integers in the range of 1 to 6.
+  * train/Inertial Signals/\*.txt -- raw sensor data for the training set (not used for the processed data)
+
+### Test set
+
+  * test/subject_test.txt -- 2,947 subject ID's (unique volunteer ID) for the data in the test set. Values are integers in the range of 1 to 30.
   * test/X_test.txt -- 2,947 rows of 561 processed variables in the test set. Values are normalized to the range [-1, 1].
-  * test/Y_test.txt -- 2,947 activity factors for the test set
-  * test/Inertial Signals/*.txt -- raw sensor data for the test set (not used for the processed data)
+  * test/Y_test.txt -- 2,947 activity factors for the test set. Values are integers in the range of 1 to 6.
+  * test/Inertial Signals/\*.txt -- raw sensor data for the test set (not used for the processed data)
+
+### Feature definitions in original data
 
 Directly from the codebook for the raw data<sup>2</sup>, here is a description of the feature data:
 
-The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+"The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
 
 Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
 
@@ -82,15 +90,15 @@ Additional vectors obtained by averaging the signals in a signal window sample. 
 * tBodyGyroMean
 * tBodyGyroJerkMean
 
-The complete list of variables of each feature vector is available in 'features.txt'
+The complete list of variables of each feature vector is available in 'features.txt'"
 
 ## Processed Data
 
-For details on how the processing was done, please refer to the [Readme](https://github.com/solquist/DataCleaningAssignment) for the processing script.
+For details on how the processing was done, please refer to the [Readme](https://github.com/solquist/DataCleaningAssignment/blob/master/README.md) for the processing script.
 
 Following are some general processing notes:
 
-  * The raw sensor data is not used in processing the data. So, the files "train/Inertial Signals/*.txt" and "test/Inertial Signals/*.txt" are not used.
+  * The raw sensor data is not used in processing the data. So, the files "train/Inertial Signals/\*.txt" and "test/Inertial Signals/\*.txt" are not used.
   * The training data set and the test data set are combined into one data set, producing 10,299 rows of data (7,352 + 2,947)
   * Only the features having labels that contain "mean()" or "std()" are kept, reducing the number of features from 561 down to 66 (covered in more detail below). There are other forms of "mean" that show up in some of the labels, e.g. with "meanFreq()" and as part of the "angle()" label. Those with "mean()" and "std()" were chosen as that appeared to be the form where the calculation was directly applied to an existing measure. It also gives mean equal treatment as standard deviation as there were no other forms of standard deviation in the labels. The [guidance](https://class.coursera.org/getdata-007/forum/thread?thread_id=188) from the discussion list is to just make sure and document your choices.
   
@@ -123,7 +131,7 @@ The encoding for the variable names is as follows. Note this encoding was based 
     * Jerk -- calculated value incorporating linear body acceleration plus angular (Jerk in the original)
   * \<component\>
     * X -- x-component of the measurement (X in the original)
-    * Y -- y-component of the measurement (X in the original)
+    * Y -- y-component of the measurement (Y in the original)
     * Z -- z-component of the measurement (Z in the original)
     * Length -- length of the (x, y, z) measurement (Mag in the original)
   * \<domain\>
